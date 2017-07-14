@@ -1,27 +1,15 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-let jsonParser = bodyParser.json();
 //const router = express.Router();
 //const buzzword = require('./routes/buzzword.js');
 
 app.use(express.static('public'));
-app.use(jsonParser);
+app.use(bodyParser.json());
 //app.use('/buzzwords', buzzword);
 
 let wordArr = [];
 let userScore = 0;
-
-// function addNewWord (buzzWord, points) {
-//   let buzzWords = {
-//     buzzWord,
-//     points,
-//     heard: false
-//   };
-
-//   wordArr.push(buzzWords);
-
-// }
 
 
 app.get('/', (req, res) => {
@@ -35,12 +23,48 @@ app.get('/buzzwords', (req, res) => {
   });
 })
 
+// Push to array, post on local host
 app.post('/buzzword', (req, res) => {
   wordArr.push(req.body);
   console.log(wordArr);
   res.json({'success': true});
-
 })
+
+// Update false to true
+app.put('/buzzword', (req, res) => {
+  wordArr.forEach( (word) => {
+    if(word.buzzWord === req.body.buzzWord) {
+      word.points = req.body.points;
+      console.log('Buzzword array', wordArr);
+      word.heard = req.body.heard;
+      res.json(`{ 'success': true, userScore: ${word.points} }`);
+    }
+  })
+  res.json(`{'success': false}`);
+})
+
+// Delete from array
+app.delete('/buzzword', (req, res) => {
+  wordArr.forEach( (word) => {
+    if(word.buzzWord === req.body.buzzWord) {
+      var wordIndex = wordArr.indexOf(req.body.buzzWord);
+      wordArr.splice(wordIndex, 1);
+      console.log('wordArr is', wordArr);
+      res.json(`{"success": true}`);
+    }
+  })
+  res.json(`{"success" : false}`);
+});
+
+// Reset
+app.post('/reset', (req, res) => {
+  if(req.body.reset === true) {
+    wordArr = [];
+    res.json(`{"success": true}`);
+  }
+});
+
+
 
 
 
