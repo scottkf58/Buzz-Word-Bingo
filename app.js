@@ -1,33 +1,17 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+const buzzword = require('./routes/buzzword.js');
 
 app.use(express.static('public'));
 
+app.use(bodyParser.urlencoded( {extended: true} ));
 
-
-//
-app.router('/buzzword')
-  .get( (req, res) => {
-
-  })
-  .post( (req, res) => {
-
-  })
-  .put( (req, res) => {
-
-  })
-  .delete( (req, res) => {
-
-  })
-
-
-app.router('/reset')
-.post( (req, res) => {
-
-})
+app.use('/buzzwords', buzzword);
 
 
 
-const server = app.lsit(3000, function() {
-  console.log('Server running on port 3000')
+
+const server = app.listen(3000, () => {
+  console.log('Server running at port ${port} ')
 })
