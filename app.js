@@ -1,13 +1,48 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const buzzword = require('./routes/buzzword.js');
+let jsonParser = bodyParser.json();
+//const router = express.Router();
+//const buzzword = require('./routes/buzzword.js');
 
 app.use(express.static('public'));
+app.use(jsonParser);
+//app.use('/buzzwords', buzzword);
 
-app.use(bodyParser.urlencoded( {extended: true} ));
+let wordArr = [];
+let userScore = 0;
 
-app.use('/buzzwords', buzzword);
+// function addNewWord (buzzWord, points) {
+//   let buzzWords = {
+//     buzzWord,
+//     points,
+//     heard: false
+//   };
+
+//   wordArr.push(buzzWords);
+
+// }
+
+
+app.get('/', (req, res) => {
+  res.send('./index.html');
+})
+
+// Get buzzWords JSON
+app.get('/buzzwords', (req, res) => {
+  res.json({
+    'buzzWords': wordArr
+  });
+})
+
+app.post('/buzzword', (req, res) => {
+  wordArr.push(req.body);
+  console.log(wordArr);
+  res.json({'success': true});
+
+})
+
+
 
 
 
